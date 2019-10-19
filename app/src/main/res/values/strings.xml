@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">My Check Ins</string>
+    <string name="checkin_title_hint">Enter a title for the Check In.</string>
+    <string name="checkin_title_label">Title</string>
+    <string name="checkin_place_hint">Enter a place for the Check In.</string>
+    <string name="checkin_place_label">Place</string>
+    <string name="checkin_details_hint">Enter details for the Check In.</string>
+    <string name="checkin_details_label">Details</string>
+    <string name="checkin_saved_label">Save</string>
+    <string name="date_picker_title">Date</string>
+    <string name="new_checkin">New Check In</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="subtitle_format">%1$d Check Ins</string>
+    <string name="help">Help</string>
+    <string name="checkin_delete_text">Delete Check In</string>
+    <string name="checkin_location_label">Location</string>
+    <string name="checkin_location_text">Show Map</string>
+    <string name="checkin_image_text">Goto Camera</string>
+    <string name="checkin_share_text">Share!</string>
+    <string name="google_maps_key">AIzaSyCpOCxsPbl-tXlRIV4nzhnRibIYymdznfY</string>
+    <string name="title_activity_maps">Map</string>
+</resources>
