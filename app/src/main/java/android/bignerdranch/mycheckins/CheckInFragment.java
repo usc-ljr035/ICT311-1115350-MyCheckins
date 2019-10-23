@@ -54,7 +54,6 @@ public class CheckInFragment extends Fragment {
     private TextView mLocation;
     private Location mCheckInLocation;
 
-
     private static final String ARG_CHECKIN_ID = "checkin_id";
     private static final String DIALOG_DATE = "DialogDate";
     private static final int REQUEST_DATE = 0;
