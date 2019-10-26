@@ -26,6 +26,7 @@ import org.w3c.dom.Text;
 
 import java.nio.charset.CharsetEncoder;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static android.bignerdranch.mycheckins.CheckInList.get;
@@ -77,6 +78,8 @@ public class CheckInListFragment extends Fragment {
                 get(getActivity()).addCheckIn(checkin);
                 Intent intent = CheckInPagerActivity.newIntent(getActivity(), checkin.getId()); //p260
                 startActivity(intent);
+
+
                 return true;
 
             case R.id.help:

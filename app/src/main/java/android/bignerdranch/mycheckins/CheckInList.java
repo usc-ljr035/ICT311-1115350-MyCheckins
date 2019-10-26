@@ -31,9 +31,7 @@ public class CheckInList {
     }
 
     public int deleteCheckIn(CheckIn c) {
-        //mDataBase.delete(DATABASE_NAME,  CheckInTable.Cols.UUID + "=\"" + c.getId().toString() + "\"", null);
-       //return mDataBase.delete(CheckInTable.NAME,  CheckInTable.Cols.UUID + "=?", new String[]{c.getId()});
-        return 0;
+       return mDataBase.delete(CheckInTable.NAME,  CheckInTable.Cols.UUID + "=?", new String[]{String.valueOf(c.getId())});
     }
 
     public void addCheckIn(CheckIn c) {

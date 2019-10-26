@@ -29,14 +29,16 @@ import androidx.fragment.app.FragmentManager;
 import java.io.File;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import database.CheckInSchema.CheckInDbSchema;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+
 import static android.bignerdranch.mycheckins.CheckInList.get;
-import static database.CheckInSchema.CheckInBaseHelper.DATABASE_NAME;
 
 
 public class CheckInFragment extends Fragment {
@@ -51,15 +53,15 @@ public class CheckInFragment extends Fragment {
     private ImageButton mPhotoButton;
     private Button mMapButton;
     private ImageView mPhotoView;
-    private TextView mLocation;
+    public TextView mLocation;
     private Location mCheckInLocation;
+
+    private GoogleApiClient mClient;
 
     private static final String ARG_CHECKIN_ID = "checkin_id";
     private static final String DIALOG_DATE = "DialogDate";
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_PHOTO = 2;
-
-    private GoogleApiClient mClient;
 
     public static CheckInFragment newInstance(UUID checkinid) {
         Bundle args = new Bundle();
@@ -77,36 +79,52 @@ public class CheckInFragment extends Fragment {
         mCheckIn = get(getActivity()).getCheckInID(checkinid);
         mPhotoFile = get(getActivity()).getPhotoFile(mCheckIn);
 
-        mClient = new GoogleApiClient.Builder(getActivity()).addApi(LocationServices.API)
+        mClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
                 .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(@Nullable Bundle bundle) {
-                LocationRequest request = LocationRequest.create();
-                request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                request.setNumUpdates(1);
-                request.setInterval(0);
 
-                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-
-                LocationServices.FusedLocationApi.requestLocationUpdates(mClient, request, new LocationListener() {
                     @Override
-                    public void onLocationChanged(Location location) {
-                        mCheckIn.setLatitude(location.getLatitude());
-                        mCheckIn.setLongitude(location.getLongitude());
-                        Log.i("LOCATION", "Got a fix: " + location);
+                    public void onConnected(@Nullable Bundle bundle) {
+                        LocationRequest request = LocationRequest.create();
+                        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                        request.setNumUpdates(1);
+                        request.setInterval(0);
+
+                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+
+                        LocationServices.FusedLocationApi.requestLocationUpdates(mClient, request, new LocationListener() {
+                            @Override
+                            public void onLocationChanged(Location location) {
+
+                                mCheckIn.setLatitude(location.getLatitude());
+                                mCheckIn.setLongitude(location.getLongitude());
+                                mLocation.setText("Latitude " + mCheckIn.getLatitude() + " Longitude " + mCheckIn.getLongitude());
+                                Log.i("LOCATION:", "Got a fix: " + location);
+                            }
+                        });
                     }
-                });
 
-            }
-
-            @Override
-            public void onConnectionSuspended(int i) { }
-        })
-        .build();
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                    }
+            }).build();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mClient.disconnect();
+
+    }
+
 
     @Override
     public void onPause() {
@@ -214,35 +232,20 @@ public class CheckInFragment extends Fragment {
             }
         });
 
-        //EXPERIMENTAL
         mLocation = (TextView) v.findViewById(R.id.checkin_location_text);
-        String latitiudetext = Double.toString(mCheckIn.getLatitude());
-        String longitudetext = Double.toString(mCheckIn.getLongitude());
-        mLocation.setText(latitiudetext + " , " + longitudetext);
-        //EXPERIMENTAL
 
-        //mDeleteButton = (Button) getView().findViewById(R.id.checkin_delete);
         mDeleteButton = (Button) v.findViewById(R.id.checkin_delete_button);
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //CheckInList.get(v.getContext()).deleteCheckIn(mCheckIn);
+                CheckInList.get(v.getContext()).deleteCheckIn(mCheckIn);
+                Intent refresh = new Intent(getContext(), CheckInListActivity.class);
+                startActivity(refresh);
+
             }
         });
 
         return v;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mClient.connect();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mClient.disconnect();
     }
 
     @Override

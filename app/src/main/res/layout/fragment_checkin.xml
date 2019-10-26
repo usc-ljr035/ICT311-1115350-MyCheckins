@@ -97,11 +97,9 @@
             android:layout_height="wrap_content"
             android:text="@string/checkin_location_text" />
 
-        <Button
-            android:id="@+id/checkin_share_button"
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/checkin_share_text"/>
+            android:layout_height="42dp" />
 
         <Button
             android:id="@+id/checkin_delete_button"

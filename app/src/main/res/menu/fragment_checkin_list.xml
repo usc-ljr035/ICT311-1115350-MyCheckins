@@ -12,8 +12,5 @@
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/help"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/checkin_delete"
-        android:title="TestDelete" />
 
 </menu>
